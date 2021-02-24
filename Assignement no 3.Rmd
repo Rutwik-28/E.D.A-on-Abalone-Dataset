@@ -1,0 +1,96 @@
+---
+title: "Assignment no 03"
+author: "Rutwik Karande"
+date: "24/02/2021"
+output: html_document
+---
+
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+PROBLEM STATEMENT:
+          Download Abalone dataset. (URL: http://archive.ics.uci.edu/ml/datasets/Abalone) Data set has total 8 Number of Attributes.
+Load the data from data file and split it into training and test datasets. Summarize the properties in the training dataset. The number of rings is the value to predict: either as a continuous value or as a classification problem. Predict the age of abalone from physical measurements using linear regression or predict ring class as classification problem
+
+Read the data
+```{r cars}
+dataFull <- read.csv(file.choose(),header = TRUE)
+
+```
+
+View the data
+```{r}
+View(dataFull)
+```
+Splitting the Data In Test and Train Dataset
+```{r}
+
+
+dataTest = dataFull [(nrow(dataFull)-10):nrow(dataFull),]
+dataTrain = dataFull [1: (nrow(dataFull)-11),]
+View(dataTest)
+View(dataTrain)
+
+
+```
+
+removing the unecessary Attributes from the dataset
+
+```{r}
+dataTest2 <- subset (dataTest, select = -c(Viscera.weight,Whole.weight,Length))
+dataTrain2 <- subset (dataTest, select = -c(Viscera.weight,Whole.weight,Length))
+```
+
+
+Train model using LR
+
+```{r}
+model2<-lm(Rings~Sex+Diameter+Height+Shucked.weight+Shell.weight, data=dataTrain2)
+```
+
+
+installing jtool
+
+```{r}
+
+install.packages("jtools")
+library(jtools)
+summ(model2 , confint = TRUE , vifs = T)
+```
+```{r}
+c<- data.frame(Diameter = 0.4, Height= 0.2, Shucked.weight = 0.3, Shell.weight =0.3, Sex = 'F')
+ c.rings <- predict(model2, c, interval="prediction", confidence = 0.9)
+cat("This adult female abalone is predicted to be approximately", round(c.rings[1]*1.5,digits=2), "years old.")
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
